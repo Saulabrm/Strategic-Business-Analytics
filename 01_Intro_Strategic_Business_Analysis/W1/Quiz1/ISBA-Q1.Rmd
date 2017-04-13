@@ -1,0 +1,82 @@
+---
+title: "ISBA-Quiz1"
+author: "Saul Garcia"
+date: "4/4/2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+setwd("/Users/saulgarcia/Dropbox/MOOCS/Business Analytics Specialization/Intro_Strategic_Business_Analysis")
+list.files()
+```
+
+
+
+
+```{r cars,message=FALSE,warning=FALSE}
+library(dplyr)
+library(ggplot2)
+names(data)
+```
+1. What is the correct mean and standard deviation of the quantity of pasta purchased by time unit by household?
+```{r}
+data = read.csv("../Data/PASTAPURCHASE_EDITED.csv")
+mean(data$PASTA)
+sd(data$PASTA)
+```
+
+2. In which area are located (i) the poorest household and (ii) the wealthiest household?
+```{r}
+wealth = data  %>% arrange(desc(INCOME)) %>% select(AREA)
+
+#Poorest
+tail(wealth,1)
+
+#Wealthiest
+head(wealth,1)
+```
+
+3. What is the maximum pasta quantity a household has bought over the whole time period? (Sum the quantity of pasta by household over time and indicate the maximum)
+```{r}
+df = data %>% group_by(HHID) %>% summarize(totalPasta = sum(PASTA)) %>% arrange(desc(totalPasta)) 
+
+head(df,1)
+```
+
+4. What is the average income of households living in area 4?
+```{r}
+data %>% filter(AREA==4) %>% summarize(avg_income = mean(INCOME))
+```
+
+5. How many households live in area 2, earn more than 20k, and have purchased more than 30 units of pasta over the whole time period?
+```{r}
+data  %>% filter(AREA == 2 & INCOME > 20000) %>% 
+  group_by(HHID) %>% 
+  summarize(totalPasta = sum(PASTA))  %>% 
+  filter(totalPasta > 30) %>%
+  summarise(n = n())
+```
+
+6. What is the correlation between the purchases of pasta and the exposures?
+```{r}
+cor(data$PASTA, data$EXPO)
+```
+
+7. Which of the following graphs reports the correct histogram by household of the total purchase of pasta made by the household over the whole period? (Sum the purchases by household and make a histogram.)
+
+Note that the color or exact representation may be different in your version.
+
+```{r}
+df = data %>% group_by(HHID) %>% summarize(totalPasta = sum(PASTA)) 
+
+ggplot(df, aes(x=totalPasta)) + geom_histogram(bins=10, fill="white",col="black") + theme_classic()
+```
+
+8. Which of the following graphs reports the correct time series of the overall total purchase of pasta? (Sum the purchases by time units and plot the quantity by time unit.)
+```{r}
+df = data %>% group_by(TIME) %>% summarize(totalPasta = sum(PASTA)) 
+
+ggplot(df, aes(x=TIME, y=totalPasta)) + geom_point() + theme_classic()
+
+```
+
