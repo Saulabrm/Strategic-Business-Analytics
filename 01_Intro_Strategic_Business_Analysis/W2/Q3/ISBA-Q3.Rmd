@@ -115,4 +115,4 @@ kable(data.frame("LikelyStay"=a, "LikelyLeave" = b, "CorrectlyClassified" = c))
 ![Table 4](./picture4.jpg)
 
 **Answer**
-**D**: Everything else being equal, employees with more projects are more likely to stay.
+**B,C,D**
